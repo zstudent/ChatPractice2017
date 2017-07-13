@@ -1,9 +1,8 @@
-package lesson170711;
+package lesson170713;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
-import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,7 +13,7 @@ import javax.swing.WindowConstants;
 
 public class Messenger {
 	
-	static ChatClient chat;
+	static Communicator chat;
 	private static JTextArea textArea;
 	
 	public static void main(String[] args) {
@@ -60,7 +59,7 @@ public class Messenger {
 		
 		frame.setVisible(true);
 		
-		chat = new ChatClient();
+		chat = new Communicator();
 
 		chat.init(Messenger::placeText);
 		
