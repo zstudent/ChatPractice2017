@@ -10,7 +10,7 @@ public class NetClient {
 	public static void main(String[] args) {
 		
 		try {
-			Socket socket = new Socket("utcnist.colorado.edu", 13);
+			Socket socket = new Socket("localhost", 10000);
 			
 			Scanner scanner = new Scanner(socket.getInputStream());
 
