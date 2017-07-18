@@ -3,10 +3,12 @@ package lesson170713;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -15,6 +17,8 @@ public class Messenger {
 	
 	static Communicator chat;
 	private static JTextArea textArea;
+	private static JScrollPane sp;
+	private static List userList;
 	
 	public static void main(String[] args) {
 		
@@ -25,11 +29,14 @@ public class Messenger {
 		LayoutManager manager = new BorderLayout(); 
 		
 		JPanel panel = new JPanel(manager);
+		panel.setPreferredSize(new Dimension(400, 400));
 		
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		
-		panel.add(textArea, BorderLayout.CENTER);
+		sp = new JScrollPane(textArea);
+		
+		panel.add(sp, BorderLayout.CENTER);
 		
 		JPanel inputPanel = new JPanel();
 		
@@ -49,7 +56,10 @@ public class Messenger {
 		
 		panel.add(inputPanel, BorderLayout.SOUTH);
 		
-		panel.setPreferredSize(new Dimension(400, 400));
+		userList = new List(10, false);
+		
+		
+		panel.add(userList, BorderLayout.WEST);
 		
 		frame.add(panel);
 		
@@ -74,7 +84,14 @@ public class Messenger {
 	}
 
 	private static void placeText(String text) {
+		if (text.startsWith("/name")) {
+			String[] words = text.split(" ");
+			String userName = words[1];
+			userList.add(userName);
+			return;
+		}
 		textArea.append(text + '\n');
+//		textArea.setCaretPosition(textArea.getDocument().getLength());
 	}
 
 }

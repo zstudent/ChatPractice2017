@@ -9,30 +9,6 @@ import java.util.function.Consumer;
 public class Communicator {
 	
 
-	public static void main(String[] args) {
-		
-		Communicator chat = new Communicator();
-
-		Scanner keyboardScanner = new Scanner(System.in);
-		
-		new Thread( () -> {
-			while (keyboardScanner.hasNextLine()) {
-				String line = keyboardScanner.nextLine();
-				chat.sendTextToServer(line);
-			}
-		}).start();
-		
-//		chat.init(new Consumer<String>() {
-//			@Override
-//			public void accept(String line) {
-//				System.out.println(line);
-//			}
-//		});
-		
-		chat.init(System.out::println);
-		
-	}
-
 	private PrintWriter writer;
 
 	public void init(Consumer<String> consumer) {
