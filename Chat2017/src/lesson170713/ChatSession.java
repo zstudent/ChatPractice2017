@@ -10,21 +10,27 @@ public class ChatSession {
 	
 	private long delay;
 	private String name;
+	private Socket socket;
+	private PrintWriter writer;
+	private Scanner scanner;
 
-	public ChatSession(String name, long delay) {
+	public ChatSession(Socket socket, String name, long delay) {
+		this.socket = socket;
 		this.name = name;
 		this.delay = delay;
+		try {
+			scanner = new Scanner(socket.getInputStream());
+			writer = new PrintWriter(socket.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private PrintWriter writer;
 
-	void processConnection(Socket socket, Consumer<String> broadcaster,
+	void processConnection(Consumer<String> broadcaster,
 			Consumer<ChatSession> sessionRemover) {
 	
 		try {
-			Scanner scanner = new Scanner(socket.getInputStream());
-	
-			writer = new PrintWriter(socket.getOutputStream());
 	
 			send2Client("/name " + name);
 			
@@ -53,6 +59,11 @@ public class ChatSession {
 		}
 		writer.println(line);
 		writer.flush();
+	}
+
+
+	public String getName() {
+		return name;
 	}
 
 }

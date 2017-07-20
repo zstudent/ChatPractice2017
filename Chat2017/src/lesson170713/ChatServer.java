@@ -34,17 +34,37 @@ public class ChatServer {
 				new Thread(() -> {  // closure
 					long delay = sessions.isEmpty()? 2000 : 100;
 					String name = "User" + userCount++;
-					ChatSession chatSession = new ChatSession(name, delay);
+
+					ChatSession chatSession = new ChatSession(socket, name, delay);
+					
+					broadcastUserName(chatSession);
+					
 					sessions.add(chatSession);
+					sendNameList2Client(chatSession);
+					
 					System.out.println("Sessions size = " + sessions.size());
-					chatSession.processConnection(socket, 
+					chatSession.processConnection( 
 							ChatServer::broadcast,
 							ChatServer::removeSession);
+					
 				}).start();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static void broadcastUserName(ChatSession chatSession) {
+		String command = "/add " + chatSession.getName();
+		broadcast(command);
+	}
+
+	private static void sendNameList2Client(ChatSession chatSession) {
+		String nameList = "/list";
+		for (ChatSession s : sessions) {
+			nameList += " " + s.getName();
+		}
+		chatSession.send2Client(nameList);
 	}
 
 	private static void broadcast(String line) {
@@ -57,6 +77,7 @@ public class ChatServer {
 	
 	private static void removeSession(ChatSession session) {
 		sessions.remove(session);
+		broadcast("/remove " + session.getName());
 		System.out.println("removed " + session);
 		System.out.println("Sessions size = " + sessions.size());
 	}
